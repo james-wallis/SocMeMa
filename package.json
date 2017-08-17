@@ -1,0 +1,29 @@
+{
+  "name": "socmema",
+  "version": "1.0.0",
+  "description": "Social Media Manager",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesemwallis/SocMeMa.git"
+  },
+  "keywords": [
+    "Social",
+    "Media",
+    "Manager"
+  ],
+  "author": "James Wallis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamesemwallis/SocMeMa/issues"
+  },
+  "homepage": "https://github.com/jamesemwallis/SocMeMa#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "socket.io": "^2.0.3"
+  }
+}
