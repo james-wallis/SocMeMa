@@ -2,15 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Twitter Dashboard</title>
+    <title>Social Media Manager</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="stylesheet.css" rel="stylesheet" type="text/css">
+    <link href="general-stylesheet.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <header class="col-12">
-      <h1>Social Media Manager</h1>
+      <nav id="product-nav" class="col-12 no-vertical-padding">
+        <div id="title-div" class="col-6 no-vertical-padding">
+          <h1>Social Media Manager</h1>
+        </div>
+        <ul class="nav-ul col-6 ">
+          <li class="nav-li"><a href="article-hunter" class="nav-a">Article Hunter</a></li>
+          <li class="nav-li"><a href="/" class="nav-a">Twitter Dashboard</a></li>
+          <li class="nav-li"><a href="/" class="nav-a">GitHub Dashboard</a></li>
+        </ul>
+      </nav>
     </header>
     <div class="col-12">
       <main id="main">
@@ -19,6 +28,8 @@
     </div>
   </body>
   <script src="/socket.io/socket.io.js"></script>
+  <!-- Initalise socket -->
+  <script type="text/javascript"> var socket = io(); </script>
   <script type="text/javascript" src="htmlelements.js"></script>
-  <script type="text/javascript" src="/article-hunter/articles.js"></script>
+  <script type="text/javascript" src="/home/homepage.js"></script>
 </html>

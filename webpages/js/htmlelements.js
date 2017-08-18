@@ -13,10 +13,10 @@
  *          classes and id added (if given).
  */
 function populateElement(element, content = '', classes = false, id = false) {
-  if (classes != false) {
+  if (classes) {
     element.className = classes;
   }
-  if (id != false) {
+  if (id) {
     element.id = id;
   }
   element.textContent = content;
@@ -31,11 +31,10 @@ function populateElement(element, content = '', classes = false, id = false) {
  * @return  container, returns the container (parent element), but with the
  *          newly created element added to its children.
  */
-function createDiv(container, classes = false, id = false) {
+function createDiv(classes = false, id = false) {
   var div = document.createElement('div');
   div = populateElement(div, '', classes, id);
-  container.appendChild(div);
-  return container;
+  return div;
 }
 
 /**
@@ -47,29 +46,47 @@ function createDiv(container, classes = false, id = false) {
  * @return  container, returns the container (parent element), but with the
  *          newly created element added to its children.
  */
-function createParagraph(container, content, classes = false, id = false) {
+function createParagraph(content, classes = false, id = false) {
   var p = document.createElement('p');
   p = populateElement(p, content, classes, id);
-  container.appendChild(p);
-  return container;
+  return p;
 }
 
 /**
  * Function to create an 'a' tag with a href and add it as a child to its parent html element
  * @param   container, the parent element in the html scope
  * @param   content, the text content that the element will have
+ * @param   href, the href of the element
  * @param   classes, the classes for the element
  * @param   id, the id of the element
- * @param   href, the href of the element
  * @param   target, the target for the link defaults to blank (new tab)
  * @return  container, returns the container (parent element), but with the
  *          newly created element added to its children.
  */
-function createLink(container, content = '', classes = false, id = false, href, target = 'blank') {
+function createLink(content = '', href, classes = false, id = false, target = 'blank') {
   var a = document.createElement('a');
   a = populateElement(a, content, classes, id);
   a.setAttribute('href', href);
   a.setAttribute('target', target);
-  container.appendChild(a);
-  return container;
+  a.style.cssText = "text-decoration: none";
+  return a;
+}
+// var list = createList(['list', 'list2', 'list3'], 'class', ['id1', 'id2', 'id3']);
+// document.getElementById('main').innerHTML = '';
+// document.getElementById('main').appendChild(list);
+function createList(listElements, listClasses = false, listIds = [], classes = false, id = false) {
+  var ul = document.createElement('ul');
+  if (classes) ul.className = classes;
+  if (id) ul.id = id;
+  for (var i = 0; i < listElements.length; i++) {
+    var li = createListElement(listElements[i], listClasses, listIds[i]);
+    ul.appendChild(li);
+  }
+  return ul;
+}
+
+function createListElement(content, classes = false, id = false) {
+  var li = document.createElement('li');
+  li = populateElement(li, content, classes, id);
+  return li;
 }

@@ -11,6 +11,9 @@ var server  = app.listen(8070);
 var io      = require('socket.io').listen(server);
 var bodyParser = require('body-parser');
 
+// Load Product Modules
+var articleHunter = require('./modules/article-hunter.js');
+
 
 // Constant page directory
 var webpages = __dirname + '/webpages/html';
@@ -41,12 +44,21 @@ app.use(bodyParser.json());
 
 // logging in order to fully understand what the API is doing
 app.use('/', function(req, res, next) { console.log(new Date(), req.method, req.url); next(); });
+// Message to show port
+console.log("\nSocial Media Manager has been loaded!");
+console.log("Available on port 8070\n");
+// console.log("Settings:");
+// console.log("    Feed Refresh: " + minutesTilRefresh + " minutes");
+// console.log("    Amount of Articles on a page: " + amountOnPage);
 
 
-
+//Connection Notifications
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
 });
+
+//Start Article Hunter when server starts
+articleHunter.start(io);

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Social Media Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="general-stylesheet.css" rel="stylesheet" type="text/css">
+    <link href="article-hunter-stylesheet.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <header class="col-12">
+      <nav id="product-nav" class="col-12 no-vertical-padding">
+        <div id="title-div" class="col-6 no-vertical-padding">
+          <h1>Social Media Manager</h1>
+        </div>
+        <ul class="nav-ul col-6 ">
+          <li class="nav-li"><a href="article-hunter" class="nav-a" id="active-product">Article Hunter</a></li>
+          <li class="nav-li"><a href="/" class="nav-a">Twitter</a></li>
+          <li class="nav-li"><a href="/" class="nav-a">GitHub</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="main" class="col-12 no-padding">
+      <div id="article-hunter-header" class="col-12">
+        <h2>Article Hunter</h2>
+        <p>Search Stack Overflow and RSS Feeds such as Google Forums.</p>
+      </div>
+      <!-- Content goes here -->
+      <div id="results-div" class="col-12 no-padding">
+        <div id="feed-selector-div" class="col-2 no-horizontal-padding">
+          <div class="feed-selector">
+            <ul>
+              <li id="setting-icon-list-item" class="hunter-button"><i class="material-icons" id="setting-icon">settings</i></li>
+              <li id="stack-overflow-button" class="hunter-button">Stack Overflow</li>
+              <li id="google-forum-button" class="hunter-button">Google Forums</li>
+            </ul>
+          </div>
+          <div id="keyword-div">
+          </div>
+          <div id="page-select" class="col-12">
+            <div class="col-12 no-padding">
+              <p>Current Page: <span id="display-page-number"></span></p>
+            </div>
+            <div class="col-12 no-horizontal-padding">
+              <a id="previous-page" class="page-button no-select">Previous</a>
+              <a id="next-page" class="page-button no-select">Next</a>
+            </div>
+          </div>
+        </div>
+        <div id="search-results" class="col-10">
+          <p class="article-hunter-info">Select a tab on the left to display results from the automated search</p>
+          <p class="article-hunter-info">Use the settings tab '<i class="material-icons" style="font-size:20px; vertical-align:bottom">settings</i>' to configure the automated search.</p>
+        </div>
+    </main>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Initalise socket -->
+  <script type="text/javascript"> var socket = io(); </script>
+  <script type="text/javascript" src="htmlelements.js"></script>
+  <script type="text/javascript" src="/article-hunter/articles.js"></script>
+  <script type="text/javascript" src="/article-hunter/articles-settings.js"></script>
+</html>
