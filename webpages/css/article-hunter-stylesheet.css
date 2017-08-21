@@ -135,4 +135,22 @@ main {
   font-size: 24px;
 }
 
+form input {
+  display: block;
+  margin: 10px auto;
+  padding: 3px 5px;
+  color: black;
+}
+
+#change-source-form input {
+  display: inline;
+}
+
+select {
+  padding: 3px 5px;
+}
+
+#show-google-feed a {
+  font-size: 12px;
+}
 /* SETTINGS PAGE END */

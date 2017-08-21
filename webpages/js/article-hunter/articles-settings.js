@@ -326,8 +326,8 @@ function amountToDisplayForm() {
    var form = createForm("add-google-feed", "add-google-feed-form", sendGoogleForums);
    form = createInputTextAndAppend(form, "google-form-title", "Enter Title", "add-google-feed-form-feed-title");
    form = createInputTextAndAppend(form, "google-form-url", "Enter URL", "add-google-feed-form-feed-url");
-   cont = createSubmitButtonAndAppend(cont, "submit-add-google-feed");
    cont.appendChild(form);
+   cont = createSubmitButtonAndAppend(cont, "submit-add-google-feed");
    cont = createParagraphAndAppend(cont, '', '', 'add-google-form-message')
  }
 
