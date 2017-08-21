@@ -118,7 +118,6 @@ function showSettings() {
 
   var header = document.createElement('h2');
   header.textContent = "Automated Search Settings";
-  header.style.color = "#D2D4C8";
   header.style.fontSize = "28px";
   div.appendChild(header);
   container.appendChild(div);

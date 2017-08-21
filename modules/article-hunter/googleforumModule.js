@@ -17,7 +17,6 @@ function fetchRSS(callback, feeds, keywordList) {
   var rss = [];
   for (var i = 0; i < feeds.length; i++) {
     rss.push(feeds[i].source);
-    console.log(feeds[i].source.title);
   }
   feed(rss, function (err, articles) {
     if (err) throw err;

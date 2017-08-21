@@ -51,8 +51,8 @@ var pageListIndex = [0];
 window.addEventListener('load', loadDiscoveredArticles);
 window.addEventListener('load', changeButtonWidth);
 window.addEventListener('resize', changeButtonWidth);
-document.getElementById('stack-overflow-button').addEventListener('click', showStackOverflow);
-document.getElementById('google-forum-button').addEventListener('click', showGoogleForums);
+document.getElementById('stack-overflow-button').addEventListener('click', showNewFeed);
+document.getElementById('google-forum-button').addEventListener('click', showNewFeed);
 document.getElementById('setting-icon-list-item');
 
 /**
@@ -68,7 +68,7 @@ function loadDiscoveredArticles() {
     console.log("refresh");
     console.log(activeFeed);
     if (activeFeed != null) {
-      refreshFeed();
+      showFeed();
     }
   });
   socket.on('keywordList', function(list) {
@@ -76,20 +76,42 @@ function loadDiscoveredArticles() {
   });
 }
 
-//Stack Overflow specific
-function showStackOverflow(event) {
+/**
+ * Function to change the active feed if a different feed is selected.
+ */
+function showNewFeed(event) {
   clearActive();
-  //Set stack-overflow as active
-  activeFeed = 'stackoverflow';
-  document.getElementById('stack-overflow-button').classList.add('active-feed');
-  var soList = serverArticles.stackoverflow;
+  if ((event.target.id).includes('stack')) {
+    activeFeed = 'stackoverflow';
+  } else if ((event.target.id).includes('google')) {
+    activeFeed = 'googleforums';
+  }
+  showFeed();
+}
+
+/**
+ * Function to display the correct feed on the article-hunter page
+ */
+function showFeed() {
+  var tagsAvailable = false;
   var container = document.getElementById('search-results');
   container.innerHTML = '';
-  if (soList.length <= 0) {
-    var content = "Oops! It seems that there are no articles available for Stack Overflow.";
+  console.log("Active Feed = " + activeFeed);
+  if (activeFeed === 'stackoverflow') {
+    document.getElementById('stack-overflow-button').classList.add('active-feed');
+    var list = serverArticles.stackoverflow;
+    activeFeed = 'stackoverflow';
+    var feedName = "Stack Overflow";
+    tagsAvailable = true;
+  } else if (activeFeed === 'googleforums') {
+    document.getElementById('google-forum-button').classList.add('active-feed');
+    var list = serverArticles.googleforums;
+    activeFeed = 'googleforums';
+    var feedName = "Google Forums";
+  }
+  if (list.length <= 0) {
+    var content = "Oops! It seems that there are no articles available for " + feedName + ".";
     container.appendChild(createParagraph(content, false, 'article-hunter-error'));
-    // container.innerHTML = "<p style='padding-top: 50px; color:#D2D4C8'> \
-    //                         Oops! It seems that there are no articles available for Stack Overflow.</p>";
   } else {
     //Create keyword selector div
     createKeywordSelector(container);
@@ -97,29 +119,26 @@ function showStackOverflow(event) {
     //Round down for integer conversion
     //Article Hunter will display the closest amount of articles as the user has requested.
     amountInColumn = Math.floor(amountInColumn);
-    var columnCounter = 0;
-    var articleCounter = 0;
+    var columnCounter = 0, articleCounter = 0, i = 0, index = 0;
     var column = createDiv('col-4');
-    var i=0;
     //Offset index for correct page display when displaying all
-    var index;
     if (showAll || pageListIndex.length === 1) {
       index = i+((currentPage-1) * amountOnPage);
     } else {
       index = pageListIndex[currentPage-1];
     }
-
-    while (i<soList.length && index<soList.length) {
-      if (soList[index].keyword === currentKeyword || showAll) {
+    while (i<list.length && index<list.length) {
+      if (list[index].keyword === currentKeyword || showAll) {
         //Create Article on HTML
         var div = createDiv('article-div');
-        var a = createLink('', soList[index].link);
-        a.appendChild(createParagraph((index+1) + ": " + soList[index].title, 'article-title'));
-        a.appendChild(createParagraph("Tags: " + soList[index].tags.join(', '), 'article-tags'));
-        a.appendChild(createParagraph("Matched: " + soList[index].keyword, 'article-matched'));
+        var a = createLink('', list[index].link);
+        a.appendChild(createParagraph((index+1) + ": " + list[index].title, 'article-title'));
+        if (tagsAvailable) {
+          a.appendChild(createParagraph("Tags: " + list[index].tags.join(', '), 'article-tags'));
+        }
+        a.appendChild(createParagraph("Matched: " + list[index].keyword, 'article-matched'));
         div.appendChild(a);
         column.appendChild(div);
-
         articleCounter++;
         if (articleCounter == amountInColumn) {
           columnCounter++;
@@ -142,96 +161,6 @@ function showStackOverflow(event) {
 }
 
 /**
- * Function to display all the elements in the google forums array on the page
- */
-function showGoogleForums(event) {
-  clearActive();
-  //Set stack-overflow as active
-  activeFeed = 'googleforum';
-  document.getElementById('google-forum-button').classList.add('active-feed');
-  var googleList = serverArticles.googleforums;
-  var container = document.getElementById('search-results');
-  container.innerHTML = '';
-  if (googleList.length <= 0) {
-    var content = "Oops! It seems that there are no articles available for Google Forums.";
-    container.appendChild(createParagraph(content, false, 'article-hunter-error'));
-  } else {
-    //Create keyword selector div
-    createKeywordSelector(container);
-    var amountInColumn = amountOnPage / amountOfColumns;
-    //Round down for integer conversion
-    //Article Hunter will display the closest amount of articles as the user has requested.
-    amountInColumn = Math.floor(amountInColumn);
-    var columnCounter = 0;
-    var articleCounter = 0;
-    var column = document.createElement('div');
-    column.classList.add('col-4');
-    var i=0;
-    var index;
-    if (showAll || pageListIndex.length === 1) {
-      index = i+((currentPage-1) * amountOnPage);
-    } else {
-      index = pageListIndex[currentPage-1];
-    }
-    while (i<googleList.length && index<googleList.length) {
-      if (googleList[index].keyword == currentKeyword || showAll) {
-        var div = document.createElement('div');
-        div.style.cssText = 'padding: 10px';
-
-        var a = document.createElement('a');
-        a.setAttribute('href', googleList[index].link);
-        a.setAttribute('target', 'blank');
-        a.style.cssText = "text-decoration: none";
-
-        var el = document.createElement('p');
-        el.textContent = (index+1) + ": " + googleList[index].title;
-        el.style.cssText = "text-transform: capitalize; color: #D2D4C8";
-        a.appendChild(el);
-
-        el = document.createElement('p');
-        el.textContent = "Matched: " + googleList[index].keyword;
-        el.style.cssText = "text-transform: capitalize; font-size: 12px";
-        a.appendChild(el);
-
-        div.appendChild(a);
-        articleCounter++;
-        column.appendChild(div);
-        if (articleCounter == amountInColumn) {
-          columnCounter++;
-          if (columnCounter == amountOfColumns) {
-            // console.log(index);
-            // nextListIndex = index+1;
-            break;
-          }
-          container.appendChild(column);
-          column = document.createElement('div');
-          column.classList.add('col-4');
-          articleCounter = 0;
-        }
-        container.appendChild(column);
-      }
-      i++;
-      index++;
-    }
-  }
-  //If googleList has more elements than the amount allowed on the page, show page buttons
-  determinePageButtonShow();
-}
-
-/**
- * Function to refresh the active feed
- */
-function refreshFeed() {
-  if (activeFeed === "stackoverflow") {
-    console.log('stack refresh');
-    showStackOverflow();
-  } else if (activeFeed === "googleforum") {
-    console.log('google forum');
-    showGoogleForums();
-  }
-}
-
-/**
  * Function to add the keyword selector to the page in order to enable the
  * ability to only see results which matched a particular keyword.
  */
@@ -244,9 +173,7 @@ function createKeywordSelector(cont) {
   var ul = createList(arr, 'keyword-select-li', arr, 'keyword-select-ul');
   keywordSelect.appendChild(ul);
   cont.appendChild(keywordSelect);
-
   //Add Event Listeners
-
   for (var i = 0; i < arr.length; i++) {
     if (arr[i]==='all') {
       document.getElementById('all').addEventListener('click', function() {
@@ -254,7 +181,7 @@ function createKeywordSelector(cont) {
         currentKeyword = '';
         pageListIndex = [0];
         currentPage = 1;
-        refreshFeed();
+        showFeed();
       });
     } else {
       document.getElementById(arr[i]).addEventListener('click', function() {
@@ -262,14 +189,11 @@ function createKeywordSelector(cont) {
         showAll = false;
         pageListIndex = [0];
         currentPage = 1;
-        refreshFeed();
+        showFeed();
       });
     }
   }
 }
-
-
-
 
 /**
  * Function to clear the active feed when the user selects another.
@@ -302,8 +226,7 @@ function determinePageButtonShow() {
   var list;
   if (activeFeed === 'stackoverflow') {
     list = serverArticles.stackoverflow;
-    // console.log(list);
-  } else if (activeFeed === 'googleforum') {
+  } else if (activeFeed === 'googleforums') {
     list = serverArticles.googleforums;
   }
   var tempList = [];
@@ -311,43 +234,56 @@ function determinePageButtonShow() {
     for (var i = 0; i < list.length; i++) {
       if (list[i].keyword === currentKeyword) {
         tempList.push(list[i]);
-        // console.log(i+1 + " " + list[i].keyword);
       }
     }
     list = tempList;
-    // console.log(list);
   }
   var pageSelectorDiv = document.getElementById('page-select');
-  var nextPage = document.getElementById('next-page');
-  var previousPage = document.getElementById('previous-page');
   if (list.length > amountOnPage) {
     pageSelectorDiv.style.display = "block";
     document.getElementById('display-page-number').textContent = currentPage;
     if (currentPage === 1) {
-      nextPage.addEventListener('click', incrementPageNumber);
-      nextPage.style.display = "inline";
-      if (previousPage.style.display == "inline" || previousPage.style.display == "") {
-        previousPage.style.display = "none";
-      }
+      showNextButton(true);
     } else if (list.length < (currentPage*amountOnPage)) {
-      previousPage.addEventListener('click', decrementPageNumber);
-      previousPage.style.display = "inline";
-      if (nextPage.style.display == "inline" || nextPage.style.display == "") {
-        nextPage.style.display = "none";
-      }
+      showPreviousButton(true);
     } else {
-      nextPage.addEventListener('click', incrementPageNumber);
-      previousPage.addEventListener('click', decrementPageNumber);
-      nextPage.style.display = "inline";
-      previousPage.style.display = "inline";
+      showNextButton();
+      showPreviousButton();
     }
   } else if (list.length <= amountOnPage){
     pageSelectorDiv.style.display = "none";
-    nextPage.style.display = "none";
-    previousPage.style.display = "none";
-    previousPage.removeEventListener('click', decrementPageNumber);
-    nextPage.removeEventListener('click', incrementPageNumber);
+    hideNextButton();
+    hidePreviousButton();
   }
+}
+
+//Functions to show and hide page selection buttons
+//If only button, hide the other one.
+function showNextButton(onlyButton = false) {
+  var nextPage = document.getElementById('next-page');
+  nextPage.classList.add('display');
+  nextPage.addEventListener('click', incrementPageNumber);
+  if (onlyButton) {
+    hidePreviousButton();
+  }
+}
+function showPreviousButton(onlyButton = false) {
+  var previousPage = document.getElementById('previous-page');
+  previousPage.classList.add('display');
+  previousPage.addEventListener('click', decrementPageNumber);
+  if (onlyButton) {
+    hideNextButton();
+  }
+}
+function hideNextButton() {
+  var nextPage = document.getElementById('next-page');
+  nextPage.classList.remove('display');
+  nextPage.removeEventListener('click', incrementPageNumber);
+}
+function hidePreviousButton() {
+  var previousPage = document.getElementById('previous-page');
+  previousPage.classList.remove('display');
+  previousPage.removeEventListener('click', decrementPageNumber);
 }
 
 //Functions to increase and decrease pageNumbers
@@ -368,5 +304,5 @@ function updatePage() {
   document.getElementById('display-page-number').textContent = currentPage;
   determinePageButtonShow();
   console.log(currentPage);
-  refreshFeed();
+  showFeed();
 }

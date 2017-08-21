@@ -47,6 +47,7 @@ main {
   background-color: #F7F9F9;
   height: 100%;
   border-top-left-radius: 10px;
+  cursor: default;
 }
 
 /* FEED SELECT BAR */
@@ -73,7 +74,13 @@ main {
   margin: 0 3px;
   cursor: default;
   color: white;
+  display: none;
 }
+
+.display {
+  display: inline;
+}
+
 
 /* FEED SELECT BAR END */
 
