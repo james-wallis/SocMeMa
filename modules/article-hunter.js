@@ -4,8 +4,8 @@
  */
 'use static'
 //Modules
-var stack = require('./article-hunter/stackoverflowModule.js');
-var google = require('./article-hunter/googleforumModule.js');
+var stack = require('./article-hunter-modules/stackoverflowModule.js');
+var google = require('./article-hunter-modules/googleforumModule.js');
 var io;
 
 module.exports = {

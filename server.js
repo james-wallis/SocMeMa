@@ -13,6 +13,7 @@ var bodyParser = require('body-parser');
 
 // Load Product Modules
 var articleHunter = require('./modules/article-hunter.js');
+var twitter = require('./modules/twitter.js');
 
 
 // Constant page directory
@@ -48,6 +49,7 @@ app.use('/', function(req, res, next) { console.log(new Date(), req.method, req.
 console.log("\nSocial Media Manager has been loaded!");
 console.log("Available on port 8070\n");
 articleHunter.showSettings();
+twitter.showSettings();
 
 
 //Connection Notifications
@@ -60,3 +62,4 @@ io.on('connection', function(socket){
 
 //Start Article Hunter when server starts
 articleHunter.start(io);
+twitter.start(io);

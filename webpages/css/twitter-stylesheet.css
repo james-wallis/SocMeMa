@@ -1,0 +1,65 @@
+
+/* responsive styles end */
+
+
+main {
+  margin: 0 30px;
+}
+
+.profile-container-inner {
+  background-color: white;
+  min-height: 300px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.25);
+}
+
+.profile-header {
+  background-color: inherit;
+}
+
+.profile-header h2 {
+  background-color: inherit;
+  font-weight: 400;
+}
+
+.profile-header p {
+  background-color: inherit;
+  font-weight: 400;
+  color: #657786;
+}
+
+.profile-picture {
+  border-radius: 100px;
+  background-color: #e6ecf0;
+  /*background-image: url("https://pbs.twimg.com/profile_images/760494003649441796/MJB6BFEG_normal.jpg");*/
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 3px solid white;
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
+}
+
+.profile-content {
+  background-color: inherit;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.stats-container {
+  background-color: inherit;
+  display: inline-block;
+  padding: 0 5px !important;
+}
+
+.tweet-count, .following-count, .followers-count, .likes-count,
+.tweet-count-title, .following-count-title, .followers-count-title, .likes-count-title {
+  background-color: inherit;
+  color: #66757f;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.tweet-count-title, .following-count-title, .followers-count-title, .likes-count-title {
+  font-size: 12px;
+}

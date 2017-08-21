@@ -23,9 +23,11 @@
   "homepage": "https://github.com/jamesemwallis/SocMeMa#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "feed-read-parser": "0.0.6",
     "node-fetch": "^1.7.2",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "twitter": "^1.7.1"
   }
 }
