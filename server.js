@@ -47,9 +47,7 @@ app.use('/', function(req, res, next) { console.log(new Date(), req.method, req.
 // Message to show port
 console.log("\nSocial Media Manager has been loaded!");
 console.log("Available on port 8070\n");
-// console.log("Settings:");
-// console.log("    Feed Refresh: " + minutesTilRefresh + " minutes");
-// console.log("    Amount of Articles on a page: " + amountOnPage);
+articleHunter.showSettings();
 
 
 //Connection Notifications

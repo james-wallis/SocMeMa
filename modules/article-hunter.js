@@ -21,6 +21,12 @@ module.exports = {
       socket.on('addGoogleForum', addGoogleForum);
       socket.on('deleteGoogleFeed', deleteGoogleForum);
     });
+  },
+
+  showSettings: function() {
+    console.log("Article-Hunter Settings:");
+    console.log("    Feed Refresh: " + minutesTilRefresh + " minutes");
+    console.log("    Amount of Articles on a page: " + amountOnPage + "\n");
   }
 }
 

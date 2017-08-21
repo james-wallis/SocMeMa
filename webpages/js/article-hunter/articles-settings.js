@@ -43,12 +43,9 @@ socket.on('keywordList', displayKeywords);
 socket.on('googleForumFeeds', function(list) {
   googleFeeds = list;
   var currentFeeds = document.getElementById('show-google-feed');
-  console.log(currentFeeds);
   if (currentFeeds != null) {
     showGoogleFeed();
-    console.log('not null');
   }
-  console.log(list);
 });
 
 /**
@@ -57,8 +54,6 @@ socket.on('googleForumFeeds', function(list) {
  */
 function rotateCog() {
   var cog = document.getElementById('setting-icon');
-  // cog.style.transform = "rotate(90deg) scale(1.2)";
-  // cog.style.color = "#F7F9F9";
   cog.style.cssText = 'transform: rotate(90deg) scale(1.2); color: #F7F9F9;';
 }
 
@@ -92,13 +87,9 @@ function displayKeywords(list) {
   keywordList = list;
   var cont = document.getElementById('keyword-div');
   cont.textContent = '';
-  var title = document.createElement('h3');
-  title.textContent = "Current Keywords";
-  cont.appendChild(title);
+  cont = createHeaderAndAppend(cont, 3, "Current Keywords");
   for (var i = 0; i < list.length; i++) {
-    var p = document.createElement('p');
-    p.textContent = list[i];
-    cont.appendChild(p);
+    cont = createParagraphAndAppend(cont, list[i]);
   }
 }
 
@@ -113,61 +104,28 @@ function showSettings() {
   var container = document.getElementById('search-results');
   container.innerHTML = '';
 
-  var div = document.createElement('div');
-  div.classList.add('col-12');
-
-  var header = document.createElement('h2');
-  header.textContent = "Automated Search Settings";
-  header.style.fontSize = "28px";
-  div.appendChild(header);
+  var div = createDiv('col-12');
+  var header = createHeaderAndAppend(div, 2, "Automated Search Settings", "search-settings-header");
   container.appendChild(div);
 
   //Create 6 divs for settings - each has an id
   var divIDs = ['add-keyword', 'edit-keyword', 'delete-keyword', 'change-sources', 'run-times', 'amount-to-display'];
   var index = 0;
   for (var i = 0; i < 2; i++) {
-    var rowCont = document.createElement('div');
-    rowCont.classList.add('col-12');
+    var rowCont = createDiv('col-12');
     rowCont.style.borderBottom ='1px solid #333';
     for (var j = 0; j < 3; j++) {
-      div = document.createElement('div');
-      div.classList.add('col-4');
-      div.classList.add('automated-settings');
-      div.id = divIDs[index];
-      rowCont.appendChild(div);
+      rowCont = createDivAndAppend(rowCont, 'col-4 automated-settings', divIDs[index]);
       index++;
     }
     container.appendChild(rowCont);
   }
-
-  var googleDiv = document.createElement('div');
-  googleDiv.classList.add('col-12');
-  googleDiv.classList.add('google-settings-page');
-
-  var el = document.createElement('h3');
-  el.textContent = "Google Forums Specific";
-  googleDiv.appendChild(el);
-
-  el = document.createElement('div');
-  el.classList.add('col-4');
-  el.classList.add('google-settings');
-  el.id = 'show-google-feed';
-  googleDiv.appendChild(el);
-
-  el = document.createElement('div');
-  el.classList.add('col-4');
-  el.classList.add('google-settings');
-  el.id = 'add-google-feed';
-  googleDiv.appendChild(el);
-
-  el = document.createElement('div');
-  el.classList.add('col-4');
-  el.classList.add('google-settings');
-  el.id = 'remove-google-feed';
-  googleDiv.appendChild(el);
-
+  var googleDiv = createDiv('col-12 google-settings-page');
+  googleDiv = createHeaderAndAppend(googleDiv, 3, "Google Forums Specific");
+  googleDiv = createDivAndAppend(googleDiv, 'col-4 google-settings', 'show-google-feed');
+  googleDiv = createDivAndAppend(googleDiv, 'col-4 google-settings', 'add-google-feed');
+  googleDiv = createDivAndAppend(googleDiv, 'col-4 google-settings', 'remove-google-feed');
   container.appendChild(googleDiv);
-
   populateSettings();
 }
 
@@ -192,37 +150,12 @@ function populateSettings() {
 function addKeywordForm() {
   var cont = document.getElementById('add-keyword');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Add Keyword';
-  cont.appendChild(title);
-
-  //Create Form to submit a new Keyword
-  var form = document.createElement('form');
-  form.name = "add-keyword";
-  form.id = "add-keyword-form";
-  form.method = "POST";
-  form.action = "/#";
-
-  var input = document.createElement('input');
-  input.type = "text";
-  input.name = "keyword";
-  input.id = "add-keyword-form-keyword";
-  input.placeholder = "Enter Keyword";
-
-  var submit = document.createElement('input');
-  submit.type = "submit";
-  submit.name = "submit-add-keyword";
-
-  var message = document.createElement('p');
-  message.id = 'add-keyword-message';
-  // form.appendChild(label);
-  form.appendChild(input);
-  form.appendChild(submit);
+  cont = createHeaderAndAppend(cont, 3, "Add Keyword");
+  var form = createForm("add-keyword", "add-keyword-form", sendKeyword);
+  form = createInputTextAndAppend(form, "keyword", "Enter Keyword", "add-keyword-form-keyword");
+  form =  createSubmitButtonAndAppend(form, "submit-add-keyword");
   cont.appendChild(form);
-  cont.appendChild(message);
-
-  //Add Event Listener to Form
-  document.getElementById('add-keyword-form').addEventListener('submit', sendKeyword);
+  cont = createParagraphAndAppend(cont, '', '', 'add-keyword-message');
 }
 
 /**
@@ -236,53 +169,21 @@ function editKeywordForm() {
   socket.on('keywordList', function(list){
     currentKeywords = list;
   });
-  console.log(currentKeywords);
   var cont = document.getElementById('edit-keyword');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Edit Keyword';
-  cont.appendChild(title);
-
-  //Create Form to submit a new Keyword
-  var form = document.createElement('form');
-  form.name = "edit-keyword";
-  form.id = "edit-keyword-form";
-  form.method = "POST";
-  form.action = "/#";
-
-  var select = document.createElement('select');
-  select.name = "edit";
-  select.placeholder = "Enter Keyword";
-  select.id = "edit-keyword-select";
-
+  cont = createHeaderAndAppend(cont, 3, 'Edit Keyword');
+  var form = createForm("edit-keyword", "edit-keyword-form", editKeyword);
+  var select = createSelect("edit", "Select Keyword", "edit-keyword-select");
   //Show all options
   var list  = keywordList;
   selectKeywordOptions(list, 'edit', select);
-
-  var input = document.createElement('input');
-  input.type = "text";
-  input.name = "edit-keyword";
-  input.placeholder = "Keyword will appear here";
-  input.readOnly = true;
-  input.id = "edit-keyword-input";
-
-  var submit = document.createElement('input');
-  submit.type = "submit";
-  submit.name = "submit-edit-keyword";
-
-  var message = document.createElement('p');
-  message.id = 'edit-keyword-message';
-
   form.appendChild(select);
-  form.appendChild(input);
-  form.appendChild(submit);
+  form = createInputTextAndAppend(form, "edit-keyword", "Keyword will appear here", "edit-keyword-input", true);
+  form = createSubmitButtonAndAppend(form, "submit-edit-keyword");
   cont.appendChild(form);
-  cont.appendChild(message);
-
+  cont = createParagraphAndAppend(cont, '', '', 'edit-keyword-message');
   //Add Event Listeners
   document.getElementById('edit-keyword-select').addEventListener('change', updateEditInput);
-  document.getElementById('edit-keyword-form').addEventListener('submit', editKeyword);
-
 }
 
 /**
@@ -292,39 +193,15 @@ function editKeywordForm() {
 function deleteKeywordForm() {
   var cont = document.getElementById('delete-keyword');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Delete Keyword';
-  cont.appendChild(title);
-
-  var form = document.createElement('form');
-  form.name = "delete-keyword";
-  form.id = 'delete-keyword-form';
-  form.method = "POST";
-  form.action = "/#";
-
-  var select = document.createElement('select');
-  select.name = "delete";
-  select.placeholder = "Delete Keyword";
-  select.id = "delete-keyword-select";
-
+  cont = createHeaderAndAppend(cont, 3, 'Delete Keyword');
+  var form = createForm("delete-keyword", "delete-keyword-form", deleteKeyword);
+  var select = createSelect("delete", "Select Keyword", "delete-keyword-select");
   var list  = keywordList;
   selectKeywordOptions(list, 'delete', select);
-
-  var submit = document.createElement('input');
-  submit.type = "submit";
-  submit.value = "Delete Keyword";
-  submit.name = "submit-delete-keyword";
-
-  var message = document.createElement('p');
-  message.id = 'delete-keyword-message';
-
   form.appendChild(select);
-  form.appendChild(submit);
+  form = createSubmitButtonAndAppend(form, "submit-delete-keyword", "Delete Keyword");
   cont.appendChild(form);
-  cont.appendChild(message);
-
-  //Event Listener for form submit
-  document.getElementById('delete-keyword-form').addEventListener('submit', deleteKeyword);
+  cont = createParagraphAndAppend(cont, '', '', 'delete-keyword-message');
 }
 
 /**
@@ -333,17 +210,9 @@ function deleteKeywordForm() {
  *      occurs to the keywordList.
  */
  function selectKeywordOptions(list, task, select) {
-   select.innerHTML = "";
-   //Show all options
-   var option = document.createElement('option');
-   option.setAttribute("hidden", "");
-   option.setAttribute("selected", "");
-   option.setAttribute("disabled", "");
-   option.textContent = "Select a Keyword";
-   select.appendChild(option);
    //Loop through each unit
    list.forEach(function (item, index) {
-     option = document.createElement('option');
+     var option = document.createElement('option');
      if (task === 'edit') {
        option.value = item;
      } else if (task === 'delete') {
@@ -363,29 +232,13 @@ function deleteKeywordForm() {
 function changeSourcesForm() {
   var cont = document.getElementById('change-sources');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Feed Sources';
-  cont.appendChild(title);
-
-  //Create Form to submit a new Keyword
-  var form = document.createElement('form');
-  form.name = "change-sources";
-  form.id = "change-source-form";
-  form.method = "POST";
-  form.action = "/#";
-
-  var input = document.createElement('input');
-  input.type = "checkbox";
-  input.classList.add('checkbox');
-  input.checked = true;
-  input.name = "feedsToUse";
-  input.value = "stack-overflow";
-
+  cont = createHeaderAndAppend(cont, 3, 'Feed Sources');
+  var form = createForm("change-sources", "change-source-form");
+  var input = createInputChecked("feedsToUse", "stack-overflow", "checkbox", true);
+  form.appendChild(input);
   var label = document.createElement('label');
   label.textContent = "Stack Overflow";
   label.for = "feedsToUse";
-
-  form.appendChild(input);
   form.appendChild(label);
   cont.appendChild(form);
 }
@@ -398,9 +251,7 @@ function changeSourcesForm() {
 function runTimesForm() {
   var cont = document.getElementById('run-times');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Run Frequency';
-  cont.appendChild(title);
+  cont = createHeaderAndAppend(cont, 3, 'Run Frequency');
 }
 
 /**
@@ -411,17 +262,10 @@ function runTimesForm() {
 function amountToDisplayForm() {
   var cont = document.getElementById('amount-to-display');
   cont.innerHTML = "";
-  var title = document.createElement('h3');
-  title.textContent = 'Layout of Articles';
-  cont.appendChild(title);
-
+  cont = createHeaderAndAppend(cont, 3, 'Layout of Articles');
   //Create Amount of Columns First
-  var div = document.createElement('div');
-  div.classList.add('display-input');
-
-  var select = document.createElement('select');
-  select.name = "columns";
-
+  var div = createDiv('display-input');
+  var select = createSelect("columns", "Amount of Columns on page");
   //Show all options
   for (var i = 1; i < 5; i++) {
     var option = document.createElement('option');
@@ -435,14 +279,9 @@ function amountToDisplayForm() {
   }
   div.appendChild(select);
   cont.appendChild(div);
-
   //Create amount of elements on a page
-  var div = document.createElement('div');
-  div.classList.add('display-input');
-
-  var select = document.createElement('select');
-  select.name = "columns";
-
+  var div = createDiv('display-input');
+  var select = createSelect("Number on page", "Amount of Articles on Page");
   //Show all options
   for (var i = 0; i < 5; i++) {
     var option = document.createElement('option');
@@ -464,109 +303,60 @@ function amountToDisplayForm() {
    input.value = select.value;
  }
 
+/**
+ * Function to show the current google feeds on the settings page
+ */
  function showGoogleFeed(list = googleFeeds) {
    console.log(list);
    var cont = document.getElementById('show-google-feed');
    cont.innerHTML = '';
-   var el = document.createElement('h4');
-   el.textContent = "Current Feeds";
-   cont.appendChild(el);
+   cont = createHeaderAndAppend(cont, 4, 'Current Feeds');
    for (var i = 0; i < list.length; i++) {
-     var p = document.createElement('p');
-     p.textContent = list[i].title;
-     cont.append(p);
-
-     var a = document.createElement('a');
-     a.textContent = googleFeeds[i].source;
-     a.href = googleFeeds[i].source;
-     cont.append(a);
+     cont = createParagraphAndAppend(cont, list[i].title);
+     cont = createLinkAndAppend(cont, googleFeeds[i].source, googleFeeds[i].source);
    }
  }
 
+ /**
+  * Function to add a form to the page which takes the inputs of a new google field
+  */
  function addGoogleFeed() {
    var cont = document.getElementById('add-google-feed');
-   var el = document.createElement('h4');
-   el.textContent = "Add Feed";
-   cont.appendChild(el);
-
-   //Create Form to submit a new Keyword
-   var form = document.createElement('form');
-   form.name = "add-google-feed";
-   form.id = "add-google-feed-form";
-   form.method = "POST";
-   form.action = "/#";
-
-   var inputTitle = document.createElement('input');
-   inputTitle.type = "text";
-   inputTitle.name = "google-form-title";
-   inputTitle.id = "add-google-feed-form-feed-title";
-   inputTitle.placeholder = "Enter Title";
-
-   var inputURL = document.createElement('input');
-   inputURL.type = "text";
-   inputURL.name = "google-form-url";
-   inputURL.id = "add-google-feed-form-feed-url";
-   inputURL.placeholder = "Enter URL";
-
-   var submit = document.createElement('input');
-   submit.type = "submit";
-   submit.name = "submit-add-google-feed";
-
-   var message = document.createElement('p');
-   message.id = 'add-google-form-message';
-   // form.appendChild(label);
-   form.appendChild(inputTitle);
-   form.appendChild(inputURL);
-   form.appendChild(submit);
+   cont = createHeaderAndAppend(cont, 4, "Add Feed");
+   var form = createForm("add-google-feed", "add-google-feed-form", sendGoogleForums);
+   form = createInputTextAndAppend(form, "google-form-title", "Enter Title", "add-google-feed-form-feed-title");
+   form = createInputTextAndAppend(form, "google-form-url", "Enter URL", "add-google-feed-form-feed-url");
+   cont = createSubmitButtonAndAppend(cont, "submit-add-google-feed");
    cont.appendChild(form);
-   cont.appendChild(message);
-
-   //Stop form submit
-   document.getElementById('add-google-feed-form').addEventListener('submit', sendGoogleForums);
+   cont = createParagraphAndAppend(cont, '', '', 'add-google-form-message')
  }
 
+ /**
+  * Function to remove a google feed from article hunter
+  */
  function removeGoogleFeed() {
    var cont = document.getElementById('remove-google-feed');
-   var el = document.createElement('h4');
-   el.textContent = "Remove Feed";
-   cont.appendChild(el);
-
-   var form = document.createElement('form');
-   form.name = "delete-google-feed";
-   form.id = 'delete-google-feed-form';
-   form.method = "POST";
-   form.action = "/#";
-
-   var select = document.createElement('select');
-   select.name = "delete-google-feed";
-   select.id = "delete-google-feed-select";
-
+   cont = createHeaderAndAppend(cont, 4, "Remove Feed");
+   var form = createForm("delete-google-feed", "delete-google-feed-form", deleteGoogleForums);
+   var select = createSelect("delete-google-feed", "Select Feed", "delete-google-feed-select");
    var list  = googleFeeds;
    var titleList = [];
    for (var i = 0; i < list.length; i++) {
      titleList.push(list[i].title);
    }
    selectKeywordOptions(titleList, 'delete', select);
-
-   var submit = document.createElement('input');
-   submit.type = "submit";
-   submit.value = "Delete Google Feed";
-   submit.name = "submit-delete-google-feed";
-
-   var message = document.createElement('p');
-   message.id = 'delete-google-feed-message';
-
    form.appendChild(select);
-   form.appendChild(submit);
+   form = createSubmitButtonAndAppend(form, "submit-delete-google-feed", "Delete Google Feed");
    cont.appendChild(form);
-   cont.appendChild(message);
-
-   //Stop form submit
-   document.getElementById('delete-google-feed-form').addEventListener('submit', deleteGoogleForums);
+   cont = createParagraphAndAppend(cont, '', '', 'delete-google-feed-message');
  }
 
 //FUNCTIONS TO SEND FORMS TO SERVER
-function sendKeyword(e) {
+/**
+ * Function to send a new keyword to the server to save and be implemented in the searches
+ * @param event, the event that called the function, used to stop the form from submitting.
+ */
+function sendKeyword(event) {
   var eventId = event.target.id;
   event.preventDefault();
   var newWord = document.getElementById('add-keyword-form-keyword').value;
@@ -590,7 +380,11 @@ function sendKeyword(e) {
   }
 }
 
-function editKeyword(e) {
+/**
+ * Function to send an edited keyword to the server to save and be implemented in the searches
+ * @param event, the event that called the function, used to stop the form from submitting.
+ */
+function editKeyword(event) {
   var eventId = event.target.id;
   event.preventDefault();
   var message = document.getElementById('edit-keyword-message');
@@ -623,7 +417,12 @@ function editKeyword(e) {
   }
 }
 
-function deleteKeyword(e) {
+/**
+ * Function to send an index to the server with the purpose of removing a keyword from the
+ *  list of keywords and remove it from the searches
+ * @param event, the event that called the function, used to stop the form from submitting.
+ */
+function deleteKeyword(event) {
   var eventId = event.target.id;
   event.preventDefault();
   var message = document.getElementById('delete-keyword-message');
@@ -642,7 +441,12 @@ function deleteKeyword(e) {
   }
 }
 
-function sendGoogleForums(e) {
+/**
+ * Function to send a new Google forum link to the server to save it, allowing
+ * it to be searched upon
+ * @param event, the event that called the function, used to stop the form from submitting.
+ */
+function sendGoogleForums(event) {
   var eventId = event.target.id;
   event.preventDefault();
   var newTitle = document.getElementById('add-google-feed-form-feed-title').value;
@@ -675,7 +479,11 @@ function sendGoogleForums(e) {
   }
 }
 
-function deleteGoogleForums(e) {
+/**
+ * Function to send an index to the server to remove a google feed from the list.
+ * @param event, the event that called the function, used to stop the form from submitting.
+ */
+function deleteGoogleForums(event) {
   var eventId = event.target.id;
   event.preventDefault();
   var message = document.getElementById('delete-google-feed-message');
