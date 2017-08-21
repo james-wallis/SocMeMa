@@ -65,8 +65,6 @@ document.getElementById('setting-icon-list-item');
 function loadDiscoveredArticles() {
   socket.on('articles', function(articles){
     serverArticles = articles;
-    console.log("refresh");
-    console.log(activeFeed);
     if (activeFeed != null) {
       showFeed();
     }
@@ -96,20 +94,20 @@ function showFeed() {
   var tagsAvailable = false;
   var container = document.getElementById('search-results');
   container.innerHTML = '';
-  console.log("Active Feed = " + activeFeed);
+  var list = [];
   if (activeFeed === 'stackoverflow') {
     document.getElementById('stack-overflow-button').classList.add('active-feed');
-    var list = serverArticles.stackoverflow;
+    list = serverArticles.stackoverflow;
     activeFeed = 'stackoverflow';
     var feedName = "Stack Overflow";
     tagsAvailable = true;
   } else if (activeFeed === 'googleforums') {
     document.getElementById('google-forum-button').classList.add('active-feed');
-    var list = serverArticles.googleforums;
+    list = serverArticles.googleforums;
     activeFeed = 'googleforums';
     var feedName = "Google Forums";
   }
-  if (list.length <= 0) {
+  if (list !== [] && list.length <= 0) {
     var content = "Oops! It seems that there are no articles available for " + feedName + ".";
     container.appendChild(createParagraph(content, false, 'article-hunter-error'));
   } else {
@@ -207,6 +205,7 @@ function clearActive() {
   document.getElementById('stack-overflow-button').classList.remove('active-feed');
   document.getElementById('google-forum-button').classList.remove('active-feed');
   activeFeed = null;
+  goToPage(1);
 }
 
 
@@ -223,7 +222,7 @@ function changeButtonWidth() {
 
 //Function to determine whether to show page buttons
 function determinePageButtonShow() {
-  var list;
+  var list = [];
   if (activeFeed === 'stackoverflow') {
     list = serverArticles.stackoverflow;
   } else if (activeFeed === 'googleforums') {
@@ -239,7 +238,7 @@ function determinePageButtonShow() {
     list = tempList;
   }
   var pageSelectorDiv = document.getElementById('page-select');
-  if (list.length > amountOnPage) {
+  if (list !== [] && list.length > amountOnPage) {
     pageSelectorDiv.style.display = "block";
     document.getElementById('display-page-number').textContent = currentPage;
     if (currentPage === 1) {

@@ -77,6 +77,7 @@ function clearActiveClass() {
   document.getElementById('setting-icon-list-item').classList.remove('active-feed');
   document.getElementById('stack-overflow-button').classList.remove('active-feed');
   document.getElementById('google-forum-button').classList.remove('active-feed');
+  document.getElementById('page-select').style.display = "none";
   activeFeed = null;
 }
 
