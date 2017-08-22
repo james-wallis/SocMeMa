@@ -145,6 +145,7 @@ form input {
 
 #change-source-form input {
   display: inline;
+  margin-right: 5px;
 }
 
 select {
