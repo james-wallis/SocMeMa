@@ -13,7 +13,7 @@
  *    googleFeeds:    The feeds that are being used for the google forums page.
  */
 var keywordList = [];
-var successColour = '#ACFFA1';
+var successColour = '#16a085';
 var errorColour = '#FF6262';
 var googleFeeds;
 /**
@@ -344,6 +344,7 @@ function sendKeyword(event) {
       var list = keywordList;
       list.push(newWord);
       refreshKeywordSelects(list);
+      document.getElementById("add-keyword-form-keyword").value = "";
       socket.emit('addKeyword', newWord);
     } else if (keywordList.indexOf(newWord) >= 0){
       showErrorMessage(message, false, "Error: The keyword is already in the list.");
@@ -379,6 +380,7 @@ function editKeyword(event) {
       var list = keywordList;
       list[index] = edit;
       refreshKeywordSelects(list);
+      document.getElementById("edit-keyword-input").value = "";
       socket.emit('editKeyword', json);
     } else {
       showErrorMessage(message, false, "Error: Old and New Keyword are the same.");
@@ -439,6 +441,8 @@ function sendGoogleForums(event) {
       var select = document.getElementById('delete-google-feed-select');
       addOptionsToSelect(select, "Select Feed", list, false);
       var json = {'title': newTitle, 'source': newSource};
+      document.getElementById("add-google-feed-form-feed-title").value = "";
+      document.getElementById("add-google-feed-form-feed-url").value = "";
       socket.emit('addGoogleForum', json);
     } else if (sourceList.indexOf(newSource) >= 0) {
       showErrorMessage(message, false, "Error: The forum is already in the list.");
