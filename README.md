@@ -38,3 +38,5 @@ It does this by using the node package 'dotenv'.
 * Body Parser
 * Feed-Read-Parser (For Reading RSS Feeds)
 * Node-Fetch (For Reading the Stack Overflow API)
+* Twitter (For using the Twitter API)
+* Dotenv (For reading the .env file which contains the Access Keys for Twitter)
