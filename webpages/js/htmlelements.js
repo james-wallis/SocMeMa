@@ -281,7 +281,6 @@ function createSubmitButtonAndAppend(container, name, value = "Submit") {
   container.appendChild(submit);
   return container;
 }
-
 /**
  * Function to create a select element and return it
  * @param name, the name of the select element
@@ -304,6 +303,27 @@ function createSelect(name, placeholder, id = '') {
   return select;
 }
 
+
+
+/**
+ * Function to create a select element and return it
+ * @param name, the name of the select element
+ * @param placeholder, the placeholder text to be shown before the select is clicked
+ * @param optionList, the list of options to be added to the select
+ * @param valueIsItem, if true then option.value is the item,
+ *                     if false option.value is the index of the current item
+ * @param id, the id of the select element
+ * @return select, the created select element
+ */
+function createSelectWithOptions(name, placeholder, optionList, valueIsItem = false, id = '') {
+  var select = document.createElement('select');
+  select.name = name;
+  select.id = id;
+  select.innerHTML = "";
+  select = addOptionsToSelect(select, placeholder, optionList, valueIsItem);
+  return select;
+}
+
 /**
  * Function to add a select to a container and return the container
  * @param container, the container to append to
@@ -312,8 +332,44 @@ function createSelect(name, placeholder, id = '') {
  * @param id, the id of the select element
  * @return container, the appended container with the select added
  */
-function createSelectAndAppend(container, name, placeholder, id='') {
-  var select = createSelect(name, placeholder, id = '');
+function createSelectAndAppend(container, name, placeholder, optionList, id='') {
+  var select = createSelect(name, placeholder, id);
   container.appendChild(select);
   return container;
+}
+
+/**
+ * Function to add create an option for a select and return the option
+ * @param select, the select to append the options to
+ * @param placeholder, the placeholder for the select (first option)
+ * @param optionList, the list of options
+ * @param valueIsItem, whether to display the index or item as the option.value
+ * @return select, the appended select
+ */
+function addOptionsToSelect(select, placeholder, optionList, valueIsItem = false) {
+  select.innerHTML = '';
+  var option = document.createElement('option');
+  option.setAttribute("hidden", "");
+  option.setAttribute("selected", "");
+  option.setAttribute("disabled", "");
+  option.textContent = placeholder;
+  select.appendChild(option);
+  optionList.forEach(function (item, index) {
+    var value = ((valueIsItem) ? item : index);
+    select.appendChild(createOption(item, value));
+  });
+  return select;
+}
+
+/**
+ * Function to add create an option for a select and return the option
+ * @param item, the item from a list of option
+ * @param value, the value of the option
+ * @return option, the created option
+ */
+function createOption(item, value) {
+  var option = document.createElement('option');
+  option.value = value;
+  option.textContent = item;
+  return option;
 }

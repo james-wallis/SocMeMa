@@ -112,7 +112,7 @@ function showSettings() {
   //Create 6 divs for settings - each has an id
   var divIDs = ['add-keyword', 'edit-keyword', 'delete-keyword', 'change-sources', 'run-times', 'amount-to-display'];
   var index = 0;
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < 1; i++) {
     var rowCont = createDiv('col-12');
     rowCont.style.borderBottom ='1px solid #333';
     for (var j = 0; j < 3; j++) {
@@ -137,9 +137,9 @@ function populateSettings() {
   addKeywordForm();
   editKeywordForm();
   deleteKeywordForm();
-  changeSourcesForm();
-  runTimesForm();
-  amountToDisplayForm();
+  // changeSourcesForm();
+  // runTimesForm();
+  // amountToDisplayForm();
   showGoogleFeed();
   addGoogleFeed();
   removeGoogleFeed();
@@ -156,7 +156,7 @@ function addKeywordForm() {
   form = createInputTextAndAppend(form, "keyword", "Enter Keyword", "add-keyword-form-keyword");
   form =  createSubmitButtonAndAppend(form, "submit-add-keyword");
   cont.appendChild(form);
-  cont = createParagraphAndAppend(cont, '', '', 'add-keyword-message');
+  cont = createParagraphAndAppend(cont, '', 'submit-message', 'add-keyword-message');
 }
 
 /**
@@ -174,15 +174,13 @@ function editKeywordForm() {
   cont.innerHTML = "";
   cont = createHeaderAndAppend(cont, 3, 'Edit Keyword');
   var form = createForm("edit-keyword", "edit-keyword-form", editKeyword);
-  var select = createSelect("edit", "Select Keyword", "edit-keyword-select");
-  //Show all options
   var list  = keywordList;
-  selectKeywordOptions(list, 'edit', select);
+  var select = createSelectWithOptions("edit", "Select Keyword", list, true, "edit-keyword-select");
   form.appendChild(select);
   form = createInputTextAndAppend(form, "edit-keyword", "Keyword will appear here", "edit-keyword-input", true);
   form = createSubmitButtonAndAppend(form, "submit-edit-keyword");
   cont.appendChild(form);
-  cont = createParagraphAndAppend(cont, '', '', 'edit-keyword-message');
+  cont = createParagraphAndAppend(cont, '', 'submit-message', 'edit-keyword-message');
   //Add Event Listeners
   document.getElementById('edit-keyword-select').addEventListener('change', updateEditInput);
 }
@@ -196,34 +194,13 @@ function deleteKeywordForm() {
   cont.innerHTML = "";
   cont = createHeaderAndAppend(cont, 3, 'Delete Keyword');
   var form = createForm("delete-keyword", "delete-keyword-form", deleteKeyword);
-  var select = createSelect("delete", "Select Keyword", "delete-keyword-select");
   var list  = keywordList;
-  selectKeywordOptions(list, 'delete', select);
+  var select = createSelectWithOptions("delete", "Select Keyword", list, false, "delete-keyword-select");
   form.appendChild(select);
   form = createSubmitButtonAndAppend(form, "submit-delete-keyword", "Delete Keyword");
   cont.appendChild(form);
-  cont = createParagraphAndAppend(cont, '', '', 'delete-keyword-message');
+  cont = createParagraphAndAppend(cont, '', 'submit-message', 'delete-keyword-message');
 }
-
-/**
- * Function to populate the options within the two keyword select forms.
- * Used when the page is loaded to populate and then run again after a change
- *      occurs to the keywordList.
- */
- function selectKeywordOptions(list, task, select) {
-   //Loop through each unit
-   list.forEach(function (item, index) {
-     var option = document.createElement('option');
-     if (task === 'edit') {
-       option.value = item;
-     } else if (task === 'delete') {
-       option.value = index;
-     }
-     option.textContent = item;
-     select.appendChild(option);
-   });
- }
-
 
 /**
  * Function to add the feedSources form to the settings page.
@@ -308,7 +285,6 @@ function amountToDisplayForm() {
  * Function to show the current google feeds on the settings page
  */
  function showGoogleFeed(list = googleFeeds) {
-   console.log(list);
    var cont = document.getElementById('show-google-feed');
    cont.innerHTML = '';
    cont = createHeaderAndAppend(cont, 4, 'Current Feeds');
@@ -327,9 +303,9 @@ function amountToDisplayForm() {
    var form = createForm("add-google-feed", "add-google-feed-form", sendGoogleForums);
    form = createInputTextAndAppend(form, "google-form-title", "Enter Title", "add-google-feed-form-feed-title");
    form = createInputTextAndAppend(form, "google-form-url", "Enter URL", "add-google-feed-form-feed-url");
+   form = createSubmitButtonAndAppend(form, "submit-add-google-feed");
    cont.appendChild(form);
-   cont = createSubmitButtonAndAppend(cont, "submit-add-google-feed");
-   cont = createParagraphAndAppend(cont, '', '', 'add-google-form-message')
+   cont = createParagraphAndAppend(cont, '', 'submit-message', 'add-google-form-message');
  }
 
  /**
@@ -339,17 +315,16 @@ function amountToDisplayForm() {
    var cont = document.getElementById('remove-google-feed');
    cont = createHeaderAndAppend(cont, 4, "Remove Feed");
    var form = createForm("delete-google-feed", "delete-google-feed-form", deleteGoogleForums);
-   var select = createSelect("delete-google-feed", "Select Feed", "delete-google-feed-select");
    var list  = googleFeeds;
    var titleList = [];
    for (var i = 0; i < list.length; i++) {
      titleList.push(list[i].title);
    }
-   selectKeywordOptions(titleList, 'delete', select);
+   var select = createSelectWithOptions("delete-google-feed", "Select Feed", titleList, false, "delete-google-feed-select");
    form.appendChild(select);
    form = createSubmitButtonAndAppend(form, "submit-delete-google-feed", "Delete Google Feed");
    cont.appendChild(form);
-   cont = createParagraphAndAppend(cont, '', '', 'delete-google-feed-message');
+   cont = createParagraphAndAppend(cont, '', 'submit-message', 'delete-google-feed-message');
  }
 
 //FUNCTIONS TO SEND FORMS TO SERVER
@@ -365,19 +340,18 @@ function sendKeyword(event) {
   if (newWord != "" && newWord != null) {
     newWord = newWord.toLowerCase();
     if (!(keywordList.indexOf(newWord) >= 0)) {
-      message.textContent = "Success! '" + newWord + "' added to the list of keywords.";
-      message.style.color = successColour;
+      showErrorMessage(message, true, "Success! '" + newWord + "' added to the list of keywords.");
+      var list = keywordList;
+      list.push(newWord);
+      refreshKeywordSelects(list);
       socket.emit('addKeyword', newWord);
     } else if (keywordList.indexOf(newWord) >= 0){
-      message.textContent = "Error: The keyword is already in the list.";
-      message.style.color = errorColour;
+      showErrorMessage(message, false, "Error: The keyword is already in the list.");
     } else {
-      message.textContent = "Error";
-      message.style.color = errorColour;
+      showErrorMessage(message, false, "Error");
     }
   } else {
-    message.textContent = "Error: Keyword field is blank.";
-    message.style.color = errorColour;
+    showErrorMessage(message, false, "Error: Keyword field is blank.");
   }
 }
 
@@ -392,7 +366,6 @@ function editKeyword(event) {
   var old = document.getElementById('edit-keyword-select').value;
   var edit = document.getElementById('edit-keyword-input').value;
   edit = edit.toLowerCase();
-  console.log(edit);
   if (edit !== null && edit !== "" && old !== null && old !== "") {
     if (edit !== old) {
       var index = keywordList.indexOf(old);
@@ -400,21 +373,18 @@ function editKeyword(event) {
         'index': index,
         'edit': edit
       }
-      message.textContent = "Success! '" + old + "' has been replaced with '" +
+      var content = "Success! '" + old + "' has been replaced with '" +
                               edit + "' in the list of keywords.";
-      message.style.color = successColour;
+      showErrorMessage(message, true, content);
       var list = keywordList;
       list[index] = edit;
-      var select = document.getElementById('edit-keyword-select');
+      refreshKeywordSelects(list);
       socket.emit('editKeyword', json);
-      selectKeywordOptions(list, 'edit', select);
     } else {
-      message.textContent = "Error: Old and New Keyword are the same.";
-      message.style.color = errorColour;
+      showErrorMessage(message, false, "Error: Old and New Keyword are the same.");
     }
   } else {
-    message.textContent = "Error: Keyword field is blank.";
-    message.style.color = errorColour;
+    showErrorMessage(message, false, "Error: Keyword field is blank.");
   }
 }
 
@@ -429,16 +399,13 @@ function deleteKeyword(event) {
   var message = document.getElementById('delete-keyword-message');
   var index = document.getElementById('delete-keyword-select').value;
   if (Number.isInteger(parseInt(index))) {
-    message.textContent = "Success! The keyword has been removed from the list.";
-    message.style.color = successColour;
+    showErrorMessage(message, true, "Success! The keyword has been removed from the list.");
     var list = keywordList;
     list.splice(index, 1);
-    var select = document.getElementById('delete-keyword-select');
+    refreshKeywordSelects(list);
     socket.emit('deleteKeyword', index);
-    selectKeywordOptions(list, 'delete', select);
   } else {
-    message.textContent = "Error: Choose a keyword to delete.";
-    message.style.color = errorColour;
+    showErrorMessage(message, false, "Error: Choose a keyword to delete.");
   }
 }
 
@@ -461,22 +428,25 @@ function sendGoogleForums(event) {
       sourceList.push(list[i].source);
     }
     if (!(sourceList.indexOf(newSource) >= 0)) {
-      message.textContent = "Success! '" + newSource + "' added to the list of Google Forums.";
-      message.style.color = successColour;
+      var content = "Success! '" + newSource + "' added to the list of Google Forums.";
+      showErrorMessage(message, true, content);
+      //Update Delete Good Feed List
+      var list = [];
+      for (var i = 0; i < googleFeeds.length; i++) {
+        list.push(googleFeeds[i].title);
+      }
+      list.push(newTitle);
+      var select = document.getElementById('delete-google-feed-select');
+      addOptionsToSelect(select, "Select Feed", list, false);
       var json = {'title': newTitle, 'source': newSource};
       socket.emit('addGoogleForum', json);
     } else if (sourceList.indexOf(newSource) >= 0) {
-      message.textContent = "Error: The forum is already in the list.";
-      message.style.color = errorColour;
+      showErrorMessage(message, false, "Error: The forum is already in the list.");
     } else {
-      message.textContent = "Error";
-      message.style.color = errorColour;
-      console.log(sourceList.indexOf(newSource) >= 0);
-      console.log(newSource);
+      showErrorMessage(message, false, "Error");
     }
   } else {
-    message.textContent = "Error: input field is blank.";
-    message.style.color = errorColour;
+    showErrorMessage(message, false, "Error: input field is blank.");
   }
 }
 
@@ -490,8 +460,7 @@ function deleteGoogleForums(event) {
   var message = document.getElementById('delete-google-feed-message');
   var index = document.getElementById('delete-google-feed-select').value;
   if (Number.isInteger(parseInt(index))) {
-    message.textContent = "Success! The Google Feed has been removed from the list.";
-    message.style.color = successColour;
+    showErrorMessage(message, true, "Success! The Google Feed has been removed from the list.");
     var list = googleFeeds;
     var titleList = [];
     var returnList = {};
@@ -500,10 +469,34 @@ function deleteGoogleForums(event) {
     }
     titleList.splice(index, 1);
     var select = document.getElementById('delete-google-feed-select');
+    addOptionsToSelect(select, "Select Feed", titleList, false);
     socket.emit('deleteGoogleFeed', index);
-    selectKeywordOptions(titleList, 'delete', select);
   } else {
-    message.textContent = "Error: Choose a Google Feed to delete.";
-    message.style.color = errorColour;
+    showErrorMessage(message, false, "Error: Choose a Google Feed to delete.");
   }
 }
+
+/**
+ * Function to show the user whether they have been successful with their request
+ * in the settings forms.
+ */
+ function showErrorMessage(container, success, content) {
+   var allMessages = document.getElementsByClassName('submit-message');
+   for (var i = 0; i < allMessages.length; i++) {
+     allMessages[i].textContent = "";
+   }
+   var colour = (success ? successColour : errorColour);
+   container.style.color = colour;
+   container.textContent = content;
+ }
+
+/**
+ * Function to refresh the options in the select elements in settings
+ * Called after a change is made to a list
+ */
+ function refreshKeywordSelects(list) {
+   var select = document.getElementById('edit-keyword-select');
+   addOptionsToSelect(select, "Select Keyword", list, true);
+   select = document.getElementById('delete-keyword-select');
+   addOptionsToSelect(select, "Select Keyword", list, false);
+ }
