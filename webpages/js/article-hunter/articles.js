@@ -21,8 +21,8 @@
  *    pageListIndex:    A list of index's of the last element printed to the page.
  */
 var serverArticles = {};
-var amountOnPage = 9;
-var amountOfColumns = 3;
+var amountOnPage = 16;
+var amountOfColumns = 4;
 var currentPage = 1;
 var activeFeed = null;
 var keywordList = [];
@@ -118,7 +118,8 @@ function showFeed() {
     //Article Hunter will display the closest amount of articles as the user has requested.
     amountInColumn = Math.floor(amountInColumn);
     var columnCounter = 0, articleCounter = 0, i = 0, index = 0;
-    var column = createDiv('col-4');
+    var columnSize = 12/amountOfColumns;
+    var column = createDiv("col-"+columnSize);
     //Offset index for correct page display when displaying all
     if (showAll || pageListIndex.length === 1) {
       index = i+((currentPage-1) * amountOnPage);
@@ -145,7 +146,7 @@ function showFeed() {
             break;
           }
           container.appendChild(column);
-          column = createDiv('col-4');
+          column = createDiv("col-"+columnSize);
           articleCounter = 0;
         }
         container.appendChild(column);
@@ -174,23 +175,35 @@ function createKeywordSelector(cont) {
   //Add Event Listeners
   for (var i = 0; i < arr.length; i++) {
     if (arr[i]==='all') {
-      document.getElementById('all').addEventListener('click', function() {
-        showAll = true;
-        currentKeyword = '';
-        pageListIndex = [0];
-        currentPage = 1;
-        showFeed();
-      });
+      document.getElementById('all').addEventListener('click', showAllKeywords);
     } else {
-      document.getElementById(arr[i]).addEventListener('click', function() {
-        currentKeyword =  this.id;
-        showAll = false;
-        pageListIndex = [0];
-        currentPage = 1;
-        showFeed();
-      });
+      document.getElementById(arr[i]).addEventListener('click', showSpecificKeyword);
     }
   }
+  //Set active keyword
+  if (!!currentKeyword) {
+    var el = document.getElementById(currentKeyword);
+  } else {
+    var el = document.getElementById('all');
+  }
+  el.style.color = '#16a085';
+  el.style.textDecoration = "underline";
+}
+
+function showAllKeywords() {
+  showAll = true;
+  currentKeyword = '';
+  pageListIndex = [0];
+  currentPage = 1;
+  showFeed();
+}
+
+function showSpecificKeyword() {
+  currentKeyword =  this.id;
+  showAll = false;
+  pageListIndex = [0];
+  currentPage = 1;
+  showFeed();
 }
 
 /**

@@ -110,11 +110,11 @@ function showSettings() {
   container.appendChild(div);
 
   //Create 6 divs for settings - each has an id
-  var divIDs = ['add-keyword', 'edit-keyword', 'delete-keyword', 'change-sources', 'run-times', 'amount-to-display'];
+  var divIDs = ['add-keyword', 'edit-keyword', 'delete-keyword', 'change-sources', 'amount-to-display', 'run-times'];
   var index = 0;
-  for (var i = 0; i < 1; i++) {
+  for (var i = 0; i < 2; i++) {
     var rowCont = createDiv('col-12');
-    rowCont.style.borderBottom ='1px solid #333';
+    rowCont.style.borderBottom ='1px solid #e2e9e9';
     for (var j = 0; j < 3; j++) {
       rowCont = createDivAndAppend(rowCont, 'col-4 automated-settings', divIDs[index]);
       index++;
@@ -138,8 +138,8 @@ function populateSettings() {
   editKeywordForm();
   deleteKeywordForm();
   // changeSourcesForm();
+  amountToDisplayForm();
   // runTimesForm();
-  // amountToDisplayForm();
   showGoogleFeed();
   addGoogleFeed();
   removeGoogleFeed();
@@ -243,32 +243,31 @@ function amountToDisplayForm() {
   cont = createHeaderAndAppend(cont, 3, 'Layout of Articles');
   //Create Amount of Columns First
   var div = createDiv('display-input');
-  var select = createSelect("columns", "Amount of Columns on page");
+  var select = createSelect("columns", "Amount of Columns on page", "column-select");
+  select.addEventListener('change', updateColumnAmount);
   //Show all options
   for (var i = 1; i < 5; i++) {
     var option = document.createElement('option');
     option.value = i;
-    if (i === 1) {
-      option.textContent = i + " Column";
-    } else {
-      option.textContent = i + " Columns";
-    }
+    option.textContent = "Columns on page: " + i;
     select.appendChild(option);
   }
   div.appendChild(select);
   cont.appendChild(div);
   //Create amount of elements on a page
   var div = createDiv('display-input');
-  var select = createSelect("Number on page", "Amount of Articles on Page");
+  var select = createSelect("Number on page", "Amount of Articles on Page", "article-select");
+  select.addEventListener('change', updateArticleAmount);
   //Show all options
-  for (var i = 0; i < 5; i++) {
+  for (var i = 1; i < 6; i++) {
     var option = document.createElement('option');
-    option.value = i*3;
-    option.textContent = i*3;
+    option.value = i;
+    option.textContent = "Number of Articles in Columns: " + i;
     select.appendChild(option);
   }
   div.appendChild(select);
   cont.appendChild(div);
+  cont = createParagraphAndAppend(cont, '', 'submit-message', 'change-layout-message');
 }
 
 /**
@@ -479,6 +478,32 @@ function deleteGoogleForums(event) {
     showErrorMessage(message, false, "Error: Choose a Google Feed to delete.");
   }
 }
+
+/**
+ * Function to update the amount of columns to show on a page.
+ * Currently doesn't send to server
+ */
+function updateColumnAmount() {
+  var el = document.getElementById("column-select");
+  amountOfColumns = el.value;
+  var message = document.getElementById('change-layout-message');
+  var content = "Amount of Columns displayed on a page changed to " + amountOfColumns + " Columns";
+  showErrorMessage(message, true, content);
+}
+
+/**
+ * Function to update the amount of columns to show on a page.
+ * Currently doesn't send to server
+ */
+ function updateArticleAmount() {
+   var el = document.getElementById("article-select");
+   amountOnPage = el.value*amountOfColumns;
+   var message = document.getElementById('change-layout-message');
+   var content = "Amount of Articles in a Column changed to " + el.value;
+   showErrorMessage(message, true, content);
+ }
+
+//General Use Functions when for when a user interacts with a form
 
 /**
  * Function to show the user whether they have been successful with their request

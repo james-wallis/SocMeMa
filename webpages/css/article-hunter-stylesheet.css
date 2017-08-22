@@ -154,6 +154,7 @@ form input {
 
 select {
   padding: 3px 5px;
+  margin: 10px 0 0 0;
 }
 
 #show-google-feed a {
