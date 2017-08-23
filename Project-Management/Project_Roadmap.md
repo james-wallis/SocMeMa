@@ -20,12 +20,12 @@ MVE = Minimum Viable Experience
 			* Add Comments
 		- [x] Update Readme for project on GitHub
 		- [x] Test Article Hunter for errors
-- [ ] **MVE** Checkpoint - Article Hunter Features complete (for now)
-	- [ ] Deploy Article Hunter on Server
+- [x] **MVE** Checkpoint - Article Hunter Features complete (for now)
+	- [x] Deploy Article Hunter on Server
 		- [x] Discuss where SMM would be deployed
-		- [ ] Research deployment on Bluemix
-		- [ ] Deployment of SMM with only Article Hunter on Bluemix
-- [ ] **MVE** Reached - SMM deployed on Bluemix with only Article Hunter functionality live
+		- [x] Research deployment on Bluemix
+		- [x] Deployment of SMM with only Article Hunter on Bluemix
+- [x] **MVE** Reached - SMM deployed on Bluemix with only Article Hunter functionality live
 - [ ] Add more functionality to Article Hunter
 	- [ ] Database Functionality for Article Hunter
 		- [ ] Research best type of database for Bluemix

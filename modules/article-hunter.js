@@ -33,7 +33,8 @@ module.exports = {
 //Initialise userFeedList for use of automated and multiple feed search
 var userFeedList = [];
 //Initialise userKeywordList for use for multiple keyword searches
-var userKeywordList = ["java", "swift", "javascript", "ibm", "node"];
+var userKeywordList = [];
+// userKeywordList = ["java", "swift", "javascript", "ibm", "node"];
 //List of google forums feeds (RSS)
 var googleForumFeeds  = [
               {'title': 'nodejs', 'source': 'https://groups.google.com/forum/feed/nodejs/topics/rss.xml'},
