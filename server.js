@@ -7,7 +7,8 @@
 'use static'
 var express = require('express');
 var app     = express();
-var server  = app.listen(8070);
+var port = process.env.PORT || 8070
+var server  = app.listen(port);
 var io      = require('socket.io').listen(server);
 var bodyParser = require('body-parser');
 
@@ -47,7 +48,7 @@ app.use(bodyParser.json());
 app.use('/', function(req, res, next) { console.log(new Date(), req.method, req.url); next(); });
 // Message to show port
 console.log("\nSocial Media Manager has been loaded!");
-console.log("Available on port 8070\n");
+console.log("Available on port " + port + "\n");
 articleHunter.showSettings();
 // twitter.showSettings();
 
